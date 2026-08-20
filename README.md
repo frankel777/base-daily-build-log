@@ -24,5 +24,7 @@ No wallet, private key, seed phrase, API key, or paid service is required.
 ## Latest snapshots
 
 <!-- DAILY_TABLE_START -->
-No snapshots yet. Run **Actions → Base Mainnet Snapshots (3x daily) → Run workflow**.
+| Date (JST) | Slot | Block | Δ blocks | Tx | Gas (gwei) | Base fee (gwei) | Gas used |
+|---|---|---:|---:|---:|---:|---:|---:|
+| 2026-08-20 | evening | 50,220,898 | 0 | 354 | 0.006 | 0.005 | 61,223,765 |
 <!-- DAILY_TABLE_END -->
