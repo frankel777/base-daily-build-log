@@ -1,0 +1,84 @@
+name: Base Mainnet Snapshots (3x daily)
+
+on:
+  workflow_dispatch:
+    inputs:
+      slot:
+        description: Snapshot slot for a manual test run
+        required: true
+        default: evening
+        type: choice
+        options:
+          - morning
+          - afternoon
+          - evening
+
+  schedule:
+    - cron: '17 23 * * *'
+    - cron: '17 5 * * *'
+    - cron: '17 11 * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: base-snapshot-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Select snapshot slot
+        id: slot
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            SLOT="${{ inputs.slot }}"
+          else
+            case "${{ github.event.schedule }}" in
+              "17 23 * * *") SLOT="morning" ;;
+              "17 5 * * *")  SLOT="afternoon" ;;
+              "17 11 * * *") SLOT="evening" ;;
+              *) echo "Unknown schedule: ${{ github.event.schedule }}"; exit 1 ;;
+            esac
+          fi
+
+          echo "slot=$SLOT" >> "$GITHUB_OUTPUT"
+          echo "Selected slot: $SLOT"
+
+      - name: Fetch Base Mainnet snapshot
+        env:
+          BASE_RPC_URL: https://mainnet.base.org
+          SNAPSHOT_SLOT: ${{ steps.slot.outputs.slot }}
+        run: python scripts/update_base_log.py
+
+      - name: Commit snapshot
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "No file changes; nothing to commit."
+            exit 0
+          fi
+
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
+
+          TODAY_JST="$(TZ=Asia/Tokyo date +%F)"
+          SLOT="${{ steps.slot.outputs.slot }}"
+
+          git add README.md data/base-snapshots.jsonl
+          git commit -m "chore(base): ${SLOT} snapshot ${TODAY_JST}"
+          git push
