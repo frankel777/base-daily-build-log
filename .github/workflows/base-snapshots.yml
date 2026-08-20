@@ -73,8 +73,8 @@ jobs:
             exit 0
           fi
 
-          git config user.name "${{ github.actor }}"
-          git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
+          git config user.name "frankel777"
+          git config user.email "93667693+frankel777@users.noreply.github.com"
 
           TODAY_JST="$(TZ=Asia/Tokyo date +%F)"
           SLOT="${{ steps.slot.outputs.slot }}"
