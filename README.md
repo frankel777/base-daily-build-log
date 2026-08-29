@@ -26,6 +26,7 @@ No wallet, private key, seed phrase, API key, or paid service is required.
 <!-- DAILY_TABLE_START -->
 | Date (JST) | Slot | Block | Δ blocks | Tx | Gas (gwei) | Base fee (gwei) | Gas used |
 |---|---|---:|---:|---:|---:|---:|---:|
+| 2026-08-29 | morning | 50,593,656 | 12,292 | 121 | 0.006 | 0.005 | 26,145,884 |
 | 2026-08-29 | evening | 50,581,364 | 7,008 | 139 | 0.006 | 0.005 | 35,272,904 |
 | 2026-08-29 | afternoon | 50,574,356 | 18,923 | 263 | 0.006 | 0.005 | 48,265,055 |
 | 2026-08-28 | morning | 50,555,433 | 17,870 | 175 | 0.006 | 0.005 | 33,949,563 |
