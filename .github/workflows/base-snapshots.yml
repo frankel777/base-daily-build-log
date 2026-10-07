@@ -1,4 +1,4 @@
-name: Base Mainnet Snapshots (3x daily)
+name: Base Mainnet Snapshots (manual only)
 
 on:
   workflow_dispatch:
@@ -12,11 +12,6 @@ on:
           - morning
           - afternoon
           - evening
-
-  schedule:
-    - cron: '17 23 * * *'
-    - cron: '17 5 * * *'
-    - cron: '17 11 * * *'
 
 permissions:
   contents: write
@@ -45,17 +40,7 @@ jobs:
         id: slot
         shell: bash
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            SLOT="${{ inputs.slot }}"
-          else
-            case "${{ github.event.schedule }}" in
-              "17 23 * * *") SLOT="morning" ;;
-              "17 5 * * *")  SLOT="afternoon" ;;
-              "17 11 * * *") SLOT="evening" ;;
-              *) echo "Unknown schedule: ${{ github.event.schedule }}"; exit 1 ;;
-            esac
-          fi
-
+          SLOT="${{ inputs.slot }}"
           echo "slot=$SLOT" >> "$GITHUB_OUTPUT"
           echo "Selected slot: $SLOT"
 
